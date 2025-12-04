@@ -1,3 +1,12 @@
+/**
+ * Diagram Viewer Component
+ *
+ * Renders Mermaid.js diagrams with interactive controls.
+ * Supports fullscreen view, PNG export, and code copying.
+ *
+ * @author Yassin Hamdi
+ */
+
 import React, { useEffect, useRef, useState } from "react";
 import mermaid from "mermaid";
 import { toPng } from "html-to-image";

@@ -1,3 +1,14 @@
+/**
+ * BluePrint Diagram - Main Application Component
+ *
+ * A web application that transforms natural language descriptions
+ * into professional system architecture diagrams.
+ *
+ * @author Yassin Hamdi
+ * @version 1.0.0
+ * @license MIT
+ */
+
 import React, { useState, useCallback } from "react";
 import { FaLinkedin, FaGithub } from "react-icons/fa";
 import "./index.css";
@@ -16,27 +27,28 @@ import { parseArchitecture } from "./utils/architectureParser";
 import { generateMermaidDiagram } from "./utils/diagramGenerator";
 
 function App() {
-  // State
   const [description, setDescription] = useState("");
   const [components, setComponents] = useState([]);
   const [mermaidCode, setMermaidCode] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState(null);
   const [history, setHistory] = useLocalStorage("blueprint-history", []);
 
-  // Generate architecture
+  /**
+   * Handles the generation of architecture diagrams.
+   * Parses user input through the Gemini API and generates Mermaid diagram code.
+   * Results are automatically saved to local storage history.
+   *
+   * @author Yassin Hamdi
+   */
   const handleGenerate = useCallback(async () => {
     if (!description.trim() || description.trim().length < 10) return;
 
     setIsLoading(true);
-    setError(null);
 
     try {
-      // Parse components from description using Gemini API
       const { components: detectedComponents, connections } =
         await parseArchitecture(description);
 
-      console.log("Parsed result:", { detectedComponents, connections });
       setComponents(detectedComponents);
 
       // Generate Mermaid diagram with AI-detected connections

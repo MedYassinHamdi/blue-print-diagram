@@ -1,6 +1,16 @@
-// Architecture component patterns for detection (fallback)
+/**
+ * Architecture Parser
+ *
+ * Parses natural language descriptions into structured architecture components.
+ * Uses Gemini API as primary parser with keyword-based fallback.
+ *
+ * @author Yassin Hamdi
+ * @module utils/architectureParser
+ */
+
 import { parseWithGemini, transformGeminiResponse } from "./geminiService";
 
+/** Component patterns for keyword-based detection (fallback) */
 const componentPatterns = {
   frontend: {
     keywords: [
@@ -165,7 +175,7 @@ const componentPatterns = {
   },
 };
 
-// Feature to component mapping for common features
+/** Maps common features to their typical component sets */
 const featureToComponents = {
   "user authentication": ["Auth Service", "User Database", "Session Cache"],
   "real-time chat": [
@@ -195,7 +205,16 @@ const featureToComponents = {
   analytics: ["Analytics Engine", "Data Warehouse", "Reporting Dashboard"],
 };
 
-// Main parsing function - uses Gemini API with fallback to keyword matching
+/**
+ * Parses architecture description using Gemini API with keyword fallback.
+ *
+ * Primary flow uses the Gemini API for intelligent component detection.
+ * Falls back to keyword-based parsing if API is unavailable or fails.
+ *
+ * @author Yassin Hamdi
+ * @param {string} description - Natural language system description
+ * @returns {Promise<Object>} Object containing components and connections arrays
+ */
 export async function parseArchitecture(description) {
   if (!description || description.trim().length < 10) {
     return { components: [], connections: [] };
@@ -221,7 +240,13 @@ export async function parseArchitecture(description) {
   return { components, connections: [] };
 }
 
-// Fallback keyword-based parsing (original logic)
+/**
+ * Fallback parser using keyword matching when API is unavailable.
+ * Scans description for known technology keywords and maps them to components.
+ *
+ * @param {string} description - System description text
+ * @returns {Array} Array of detected component objects
+ */
 function parseArchitectureFallback(description) {
   if (!description || description.trim().length < 10) {
     return [];

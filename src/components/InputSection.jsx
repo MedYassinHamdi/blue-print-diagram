@@ -1,3 +1,12 @@
+/**
+ * Input Section Component
+ *
+ * Textarea for entering architecture descriptions with
+ * character counter and clear functionality.
+ *
+ * @author Yassin Hamdi
+ */
+
 import React from "react";
 import { X } from "lucide-react";
 

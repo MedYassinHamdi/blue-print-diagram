@@ -1,12 +1,17 @@
+/**
+ * Gemini API Service
+ *
+ * Handles communication with Google's Gemini API for natural language
+ * processing of architecture descriptions. Extracts components and
+ * their relationships from user input.
+ *
+ * @author Yassin Hamdi
+ * @module utils/geminiService
+ */
+
 const GEMINI_API_KEY = process.env.REACT_APP_GEMINI_API_KEY;
 const GEMINI_API_URL =
   "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent";
-
-// Debug: Log if API key is available (only first few chars for security)
-console.log(
-  "Gemini API Key loaded:",
-  GEMINI_API_KEY ? `${GEMINI_API_KEY.substring(0, 10)}...` : "NOT FOUND"
-);
 
 const SYSTEM_PROMPT = `You are a system architecture expert. Given a description of a software system, extract the components and their connections.
 
@@ -46,14 +51,19 @@ Rules:
 5. Always include at least a frontend, backend, and database for web applications
 6. Return ONLY the JSON object, nothing else`;
 
+/**
+ * Sends architecture description to Gemini API for intelligent parsing.
+ * Extracts system components and their logical connections.
+ *
+ * @author Yassin Hamdi
+ * @param {string} description - Natural language description of the system architecture
+ * @returns {Promise<Object>} Parsed components and connections
+ * @throws {Error} If API key is missing or request fails
+ */
 export async function parseWithGemini(description) {
-  console.log("Gemini API Key exists:", !!GEMINI_API_KEY);
-
   if (!GEMINI_API_KEY) {
     throw new Error("Gemini API key not configured");
   }
-
-  console.log("Calling Gemini API...");
 
   const response = await fetch(`${GEMINI_API_URL}?key=${GEMINI_API_KEY}`, {
     method: "POST",
@@ -79,18 +89,14 @@ export async function parseWithGemini(description) {
     }),
   });
 
-  console.log("Gemini API response status:", response.status);
-
   if (!response.ok) {
     const errorData = await response.json().catch(() => ({}));
-    console.error("Gemini API error:", errorData);
     throw new Error(
       errorData.error?.message || `API request failed: ${response.status}`
     );
   }
 
   const data = await response.json();
-  console.log("Gemini API raw response:", data);
 
   // Extract the text content from Gemini's response
   const textContent = data.candidates?.[0]?.content?.parts?.[0]?.text;
@@ -122,7 +128,7 @@ export async function parseWithGemini(description) {
   return parsed;
 }
 
-// Icon mapping for component types
+/** Maps component types to their corresponding Lucide icon names */
 const typeIcons = {
   frontend: "Monitor",
   backend: "Server",
@@ -134,7 +140,13 @@ const typeIcons = {
   service: "Cpu",
 };
 
-// Transform Gemini response to match existing component structure
+/**
+ * Transforms raw Gemini API response into the application's component structure.
+ * Assigns unique IDs, icons, and colors to each component.
+ *
+ * @param {Object} geminiResponse - Raw response from Gemini API
+ * @returns {Object} Formatted components and connections arrays
+ */
 export function transformGeminiResponse(geminiResponse) {
   const components = geminiResponse.components.map((comp, index) => ({
     id: `comp_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,

@@ -1,12 +1,14 @@
+/**
+ * History Sidebar Component
+ *
+ * Collapsible sidebar panel for accessing previously generated diagrams.
+ * Stores history in localStorage for persistence across sessions.
+ *
+ * @author Yassin Hamdi
+ */
+
 import React, { useState } from "react";
-import {
-  History,
-  Trash2,
-  ChevronRight,
-  ChevronLeft,
-  Clock,
-  X,
-} from "lucide-react";
+import { History, Trash2, ChevronRight, Clock, X } from "lucide-react";
 
 export function HistorySidebar({ history, onSelect, onDelete, onClear }) {
   const [isOpen, setIsOpen] = useState(false);

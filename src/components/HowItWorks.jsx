@@ -1,3 +1,12 @@
+/**
+ * How It Works Section Component
+ *
+ * Three-step visual guide explaining the application workflow.
+ * Features animated step indicators with connecting lines.
+ *
+ * @author Yassin Hamdi
+ */
+
 import React from "react";
 import { motion } from "framer-motion";
 import { MessageSquare, Cpu, GitGraph } from "lucide-react";

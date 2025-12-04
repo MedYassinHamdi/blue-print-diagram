@@ -1,3 +1,12 @@
+/**
+ * Features Section Component
+ *
+ * Showcases key application features in an animated grid layout.
+ * Uses Framer Motion for scroll-triggered animations.
+ *
+ * @author Yassin Hamdi
+ */
+
 import React from "react";
 import { motion } from "framer-motion";
 import { Zap, Brain, Download, History } from "lucide-react";

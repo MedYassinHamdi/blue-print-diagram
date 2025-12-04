@@ -1,3 +1,12 @@
+/**
+ * Component Card
+ *
+ * Displays individual architecture component with icon,
+ * type badge, and description in a styled card layout.
+ *
+ * @author Yassin Hamdi
+ */
+
 import React from "react";
 import {
   Monitor,

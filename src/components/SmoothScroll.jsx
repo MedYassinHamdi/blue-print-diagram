@@ -1,3 +1,12 @@
+/**
+ * Smooth Scroll Wrapper Component
+ *
+ * Provides smooth scrolling behavior using Lenis library.
+ * Wraps application content for enhanced scroll experience.
+ *
+ * @author Yassin Hamdi
+ */
+
 import { ReactLenis } from "@studio-freight/react-lenis";
 
 export function SmoothScroll({ children }) {

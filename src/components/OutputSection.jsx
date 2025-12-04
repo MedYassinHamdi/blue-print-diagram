@@ -1,3 +1,12 @@
+/**
+ * Output Section Component
+ *
+ * Two-panel layout displaying detected components and
+ * the generated architecture diagram side by side.
+ *
+ * @author Yassin Hamdi
+ */
+
 import React from "react";
 import { ComponentCard } from "./ComponentCard";
 import { DiagramViewer } from "./DiagramViewer";

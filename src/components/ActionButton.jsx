@@ -1,3 +1,12 @@
+/**
+ * Action Button Component
+ *
+ * Primary CTA button for triggering diagram generation.
+ * Displays loading state during API requests.
+ *
+ * @author Yassin Hamdi
+ */
+
 import React from "react";
 import { Loader2, ArrowRight } from "lucide-react";
 

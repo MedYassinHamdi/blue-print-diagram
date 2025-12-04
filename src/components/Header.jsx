@@ -1,3 +1,12 @@
+/**
+ * Header Component
+ *
+ * Hero section with animated branding and tagline.
+ * Features aurora background effects using Framer Motion.
+ *
+ * @author Yassin Hamdi
+ */
+
 import React from "react";
 import { motion } from "framer-motion";
 

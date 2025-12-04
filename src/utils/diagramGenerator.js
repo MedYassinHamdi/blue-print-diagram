@@ -1,3 +1,24 @@
+/**
+ * Mermaid Diagram Generator
+ *
+ * Generates Mermaid.js flowchart syntax from parsed architecture components.
+ * Creates layered diagrams with proper styling and connections.
+ *
+ * @author Yassin Hamdi
+ * @module utils/diagramGenerator
+ */
+
+/**
+ * Generates Mermaid flowchart code from architecture components.
+ *
+ * Creates a layered diagram with subgraphs for each component type.
+ * Supports both API-provided connections and automatic layer-based connections.
+ *
+ * @author Yassin Hamdi
+ * @param {Array} components - Array of component objects with name, type, etc.
+ * @param {Array} connections - Optional array of connection objects from API
+ * @returns {string} Mermaid flowchart diagram code
+ */
 export function generateMermaidDiagram(components, connections = []) {
   if (!components || components.length === 0) {
     return "";
