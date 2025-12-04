@@ -1,6 +1,5 @@
 import React from "react";
 import { motion } from "framer-motion";
-import { Workflow } from "lucide-react";
 
 export function Header() {
   return (

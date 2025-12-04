@@ -1,4 +1,5 @@
 import React, { useState, useCallback } from "react";
+import { FaLinkedin, FaGithub } from "react-icons/fa";
 import "./index.css";
 
 import { SmoothScroll } from "./components/SmoothScroll";
@@ -158,9 +159,29 @@ function App() {
 
           {/* Footer */}
           <footer className="py-12 text-center text-dark-500 text-sm border-t border-dark-800/50 bg-dark-900/30 backdrop-blur-sm">
-            <p className="mb-2">
+            <p className="mb-4">
               BluePrint Diagram &copy; {new Date().getFullYear()}
             </p>
+            <div className="flex items-center justify-center gap-6 mb-4">
+              <a
+                href="https://www.linkedin.com/in/yassin-hamdi"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-dark-400 hover:text-indigo-400 transition-colors duration-200"
+                aria-label="LinkedIn"
+              >
+                <FaLinkedin className="w-6 h-6" />
+              </a>
+              <a
+                href="https://github.com/medYassinHamdi"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-dark-400 hover:text-white transition-colors duration-200"
+                aria-label="GitHub"
+              >
+                <FaGithub className="w-6 h-6" />
+              </a>
+            </div>
             <p className="opacity-60">
               Made with React, Mermaid.js & Framer Motion
             </p>
