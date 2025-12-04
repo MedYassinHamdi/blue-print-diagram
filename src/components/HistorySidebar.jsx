@@ -1,32 +1,69 @@
-import React from "react";
-import { History, Trash2, ChevronRight, Clock } from "lucide-react";
+import React, { useState } from "react";
+import {
+  History,
+  Trash2,
+  ChevronRight,
+  ChevronLeft,
+  Clock,
+  X,
+} from "lucide-react";
 
 export function HistorySidebar({ history, onSelect, onDelete, onClear }) {
+  const [isOpen, setIsOpen] = useState(false);
+
   if (!history || history.length === 0) {
     return null;
   }
 
   return (
     <aside
-      className="fixed right-4 top-1/2 -translate-y-1/2 z-40"
+      className="fixed right-0 top-1/2 -translate-y-1/2 z-40"
       aria-label="Diagram history"
     >
-      <div className="card p-4 w-72 max-h-[500px] overflow-hidden flex flex-col">
+      {/* Toggle Button */}
+      <button
+        onClick={() => setIsOpen(!isOpen)}
+        className={`absolute top-1/2 -translate-y-1/2 -left-10 p-2 rounded-l-xl bg-dark-800 border border-r-0 border-dark-700 hover:bg-dark-700 transition-all ${
+          isOpen ? "opacity-0 pointer-events-none" : "opacity-100"
+        }`}
+        title="Open history"
+      >
+        <History className="w-5 h-5 text-primary-400" />
+        <span className="absolute -top-1 -right-1 w-4 h-4 bg-primary-500 rounded-full text-[10px] text-white flex items-center justify-center">
+          {history.length}
+        </span>
+      </button>
+
+      {/* Sidebar Panel */}
+      <div
+        className={`card p-4 w-72 max-h-[500px] overflow-hidden flex flex-col transition-transform duration-300 ${
+          isOpen ? "translate-x-0 mr-4" : "translate-x-full"
+        }`}
+      >
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-2">
             <History className="w-5 h-5 text-primary-400" />
             <h3 className="font-semibold text-dark-200">History</h3>
           </div>
 
-          {history.length > 0 && (
+          <div className="flex items-center gap-2">
+            {history.length > 0 && (
+              <button
+                onClick={onClear}
+                className="text-xs text-dark-500 hover:text-rose-400 transition-colors"
+                title="Clear all history"
+              >
+                Clear all
+              </button>
+            )}
             <button
-              onClick={onClear}
-              className="text-xs text-dark-500 hover:text-rose-400 transition-colors"
-              title="Clear all history"
+              onClick={() => setIsOpen(false)}
+              className="p-1 rounded-lg hover:bg-dark-700 text-dark-400 hover:text-dark-200 transition-colors"
+              title="Close history"
             >
-              Clear all
+              <X className="w-4 h-4" />
             </button>
-          )}
+          </div>
         </div>
 
         <div className="space-y-2 overflow-y-auto flex-1">

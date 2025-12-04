@@ -21,6 +21,7 @@ function App() {
   const [components, setComponents] = useState([]);
   const [mermaidCode, setMermaidCode] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
   const [history, setHistory] = useLocalStorage("blueprint-history", []);
 
   // Generate architecture
@@ -28,17 +29,18 @@ function App() {
     if (!description.trim() || description.trim().length < 10) return;
 
     setIsLoading(true);
-
-    // Simulate processing delay for better UX
-    await new Promise((resolve) => setTimeout(resolve, 800));
+    setError(null);
 
     try {
-      // Parse components from description
-      const detectedComponents = parseArchitecture(description);
+      // Parse components from description using Gemini API
+      const { components: detectedComponents, connections } =
+        await parseArchitecture(description);
+
+      console.log("Parsed result:", { detectedComponents, connections });
       setComponents(detectedComponents);
 
-      // Generate Mermaid diagram
-      const diagram = generateMermaidDiagram(detectedComponents);
+      // Generate Mermaid diagram with AI-detected connections
+      const diagram = generateMermaidDiagram(detectedComponents, connections);
       setMermaidCode(diagram);
 
       // Save to history
@@ -46,6 +48,7 @@ function App() {
         id: `history_${Date.now()}`,
         description: description,
         components: detectedComponents,
+        connections: connections,
         mermaidCode: diagram,
         componentCount: detectedComponents.length,
         timestamp: Date.now(),

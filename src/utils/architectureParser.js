@@ -1,4 +1,6 @@
-// Architecture component patterns for detection
+// Architecture component patterns for detection (fallback)
+import { parseWithGemini, transformGeminiResponse } from "./geminiService";
+
 const componentPatterns = {
   frontend: {
     keywords: [
@@ -193,7 +195,34 @@ const featureToComponents = {
   analytics: ["Analytics Engine", "Data Warehouse", "Reporting Dashboard"],
 };
 
-export function parseArchitecture(description) {
+// Main parsing function - uses Gemini API with fallback to keyword matching
+export async function parseArchitecture(description) {
+  if (!description || description.trim().length < 10) {
+    return { components: [], connections: [] };
+  }
+
+  // Try Gemini API first
+  try {
+    const geminiResponse = await parseWithGemini(description);
+    const result = transformGeminiResponse(geminiResponse);
+
+    if (result.components.length > 0) {
+      return result;
+    }
+  } catch (error) {
+    console.warn(
+      "Gemini API failed, falling back to keyword parsing:",
+      error.message
+    );
+  }
+
+  // Fallback to keyword-based parsing
+  const components = parseArchitectureFallback(description);
+  return { components, connections: [] };
+}
+
+// Fallback keyword-based parsing (original logic)
+function parseArchitectureFallback(description) {
   if (!description || description.trim().length < 10) {
     return [];
   }

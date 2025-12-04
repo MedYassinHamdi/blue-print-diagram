@@ -1,4 +1,4 @@
-export function generateMermaidDiagram(components) {
+export function generateMermaidDiagram(components, connections = []) {
   if (!components || components.length === 0) {
     return "";
   }
@@ -80,111 +80,127 @@ export function generateMermaidDiagram(components) {
     diagram += "    end\n\n";
   });
 
-  // Generate connections between layers
+  // Generate connections
   diagram += "    %% Connections\n";
 
-  // Connect frontend to backend
-  if (grouped.frontend && grouped.backend) {
-    grouped.frontend.forEach((f) => {
+  // If we have LLM-provided connections, use those
+  if (connections && connections.length > 0) {
+    connections.forEach((conn) => {
+      const fromId = nodeIds.get(conn.from);
+      const toId = nodeIds.get(conn.to);
+      if (fromId && toId) {
+        if (conn.label) {
+          diagram += `    ${fromId} -->|${conn.label}| ${toId}\n`;
+        } else {
+          diagram += `    ${fromId} --> ${toId}\n`;
+        }
+      }
+    });
+  } else {
+    // Fallback to hardcoded connections based on layer types
+    // Connect frontend to backend
+    if (grouped.frontend && grouped.backend) {
+      grouped.frontend.forEach((f) => {
+        grouped.backend.forEach((b) => {
+          const fId = nodeIds.get(f.name);
+          const bId = nodeIds.get(b.name);
+          if (fId && bId) {
+            diagram += `    ${fId} --> ${bId}\n`;
+          }
+        });
+      });
+    }
+
+    // Connect backend to auth
+    if (grouped.backend && grouped.auth) {
       grouped.backend.forEach((b) => {
-        const fId = nodeIds.get(f.name);
-        const bId = nodeIds.get(b.name);
-        if (fId && bId) {
-          diagram += `    ${fId} --> ${bId}\n`;
-        }
+        grouped.auth.forEach((a) => {
+          const bId = nodeIds.get(b.name);
+          const aId = nodeIds.get(a.name);
+          if (bId && aId) {
+            diagram += `    ${bId} <--> ${aId}\n`;
+          }
+        });
       });
-    });
-  }
+    }
 
-  // Connect backend to auth
-  if (grouped.backend && grouped.auth) {
-    grouped.backend.forEach((b) => {
-      grouped.auth.forEach((a) => {
-        const bId = nodeIds.get(b.name);
-        const aId = nodeIds.get(a.name);
-        if (bId && aId) {
-          diagram += `    ${bId} <--> ${aId}\n`;
-        }
+    // Connect backend to database
+    if (grouped.backend && grouped.database) {
+      grouped.backend.forEach((b) => {
+        grouped.database.forEach((d) => {
+          const bId = nodeIds.get(b.name);
+          const dId = nodeIds.get(d.name);
+          if (bId && dId) {
+            diagram += `    ${bId} --> ${dId}\n`;
+          }
+        });
       });
-    });
-  }
+    }
 
-  // Connect backend to database
-  if (grouped.backend && grouped.database) {
-    grouped.backend.forEach((b) => {
-      grouped.database.forEach((d) => {
-        const bId = nodeIds.get(b.name);
-        const dId = nodeIds.get(d.name);
-        if (bId && dId) {
-          diagram += `    ${bId} --> ${dId}\n`;
-        }
+    // Connect backend to cache
+    if (grouped.backend && grouped.cache) {
+      grouped.backend.forEach((b) => {
+        grouped.cache.forEach((c) => {
+          const bId = nodeIds.get(b.name);
+          const cId = nodeIds.get(c.name);
+          if (bId && cId) {
+            diagram += `    ${bId} <--> ${cId}\n`;
+          }
+        });
       });
-    });
-  }
+    }
 
-  // Connect backend to cache
-  if (grouped.backend && grouped.cache) {
-    grouped.backend.forEach((b) => {
-      grouped.cache.forEach((c) => {
-        const bId = nodeIds.get(b.name);
-        const cId = nodeIds.get(c.name);
-        if (bId && cId) {
-          diagram += `    ${bId} <--> ${cId}\n`;
-        }
+    // Connect backend to services
+    if (grouped.backend && grouped.service) {
+      grouped.backend.forEach((b) => {
+        grouped.service.forEach((s) => {
+          const bId = nodeIds.get(b.name);
+          const sId = nodeIds.get(s.name);
+          if (bId && sId) {
+            diagram += `    ${bId} --> ${sId}\n`;
+          }
+        });
       });
-    });
-  }
+    }
 
-  // Connect backend to services
-  if (grouped.backend && grouped.service) {
-    grouped.backend.forEach((b) => {
-      grouped.service.forEach((s) => {
-        const bId = nodeIds.get(b.name);
-        const sId = nodeIds.get(s.name);
-        if (bId && sId) {
-          diagram += `    ${bId} --> ${sId}\n`;
-        }
+    // Connect backend to queue
+    if (grouped.backend && grouped.queue) {
+      grouped.backend.forEach((b) => {
+        grouped.queue.forEach((q) => {
+          const bId = nodeIds.get(b.name);
+          const qId = nodeIds.get(q.name);
+          if (bId && qId) {
+            diagram += `    ${bId} --> ${qId}\n`;
+          }
+        });
       });
-    });
-  }
+    }
 
-  // Connect backend to queue
-  if (grouped.backend && grouped.queue) {
-    grouped.backend.forEach((b) => {
-      grouped.queue.forEach((q) => {
-        const bId = nodeIds.get(b.name);
-        const qId = nodeIds.get(q.name);
-        if (bId && qId) {
-          diagram += `    ${bId} --> ${qId}\n`;
-        }
+    // Connect backend to storage
+    if (grouped.backend && grouped.storage) {
+      grouped.backend.forEach((b) => {
+        grouped.storage.forEach((s) => {
+          const bId = nodeIds.get(b.name);
+          const sId = nodeIds.get(s.name);
+          if (bId && sId) {
+            diagram += `    ${bId} --> ${sId}\n`;
+          }
+        });
       });
-    });
-  }
+    }
 
-  // Connect backend to storage
-  if (grouped.backend && grouped.storage) {
-    grouped.backend.forEach((b) => {
-      grouped.storage.forEach((s) => {
-        const bId = nodeIds.get(b.name);
-        const sId = nodeIds.get(s.name);
-        if (bId && sId) {
-          diagram += `    ${bId} --> ${sId}\n`;
-        }
+    // Connect services to database (for services that might need data access)
+    if (grouped.service && grouped.database) {
+      grouped.service.slice(0, 2).forEach((s) => {
+        grouped.database.forEach((d) => {
+          const sId = nodeIds.get(s.name);
+          const dId = nodeIds.get(d.name);
+          if (sId && dId) {
+            diagram += `    ${sId} -.-> ${dId}\n`;
+          }
+        });
       });
-    });
-  }
-
-  // Connect services to database (for services that might need data access)
-  if (grouped.service && grouped.database) {
-    grouped.service.slice(0, 2).forEach((s) => {
-      grouped.database.forEach((d) => {
-        const sId = nodeIds.get(s.name);
-        const dId = nodeIds.get(d.name);
-        if (sId && dId) {
-          diagram += `    ${sId} -.-> ${dId}\n`;
-        }
-      });
-    });
+    }
   }
 
   // Apply class styles
